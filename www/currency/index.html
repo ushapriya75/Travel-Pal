@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Currency</title>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <script language="JavaScript" src="http://www.geoplugin.net/javascript.gp" type="text/javascript"></script>
+   <!-- The core Firebase JS SDK is always required and must be listed first -->
+   <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-app.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-auth.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
+   <!-- TODO: Add SDKs for Firebase products that you want to use
+      https://firebase.google.com/docs/web/setup#available-libraries -->
+ 
+   <script>
+     // Your web app's Firebase configuration
+     var firebaseConfig = {
+       apiKey: "AIzaSyCiD9PEd0fY39Y6y1t2-Nj3K3Q3yNzV0O0",
+       authDomain: "fir-app-e5712.firebaseapp.com",
+       databaseURL: "https://fir-app-e5712.firebaseio.com",
+       projectId: "fir-app-e5712",
+       storageBucket: "fir-app-e5712.appspot.com",
+       messagingSenderId: "33938463986",
+       appId: "1:33938463986:web:3876a645ffc1f4e745846b"
+     };
+     // This will start/ Initialize Firebase
+     firebase.initializeApp(firebaseConfig);
+   </script>
+ <style>
+    .content {
+      max-width: 400px;
+      margin: auto;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+
+  <div>
+    <script language="Javascript">
+      document.write("<h3 class='text-center'>Check Currency Rate</h3>");
+      function getInputValue() {
+        // Selecting the input element and get its value 
+        var inputVal = document.getElementById("amt").value;
+        var converted_amount = geoplugin_currencyConverter(inputVal, geoplugin_currencySymbol());
+        var uid = firebase.database().ref().child('currency').push().key;
+      var data = {
+        id: uid,
+        check_amount: inputVal,
+        converted_amount : converted_amount
+      }
+      
+      var updates = {};
+      updates['/currency/' + uid] = data;
+      firebase.database().ref().update(updates);
+        document.getElementById("outputDiv").innerHTML = "<h3 class='text-center'>" + converted_amount + "</h3>";
+      }
+    </script>
+    <div class="row">
+      <div class="col-md-4 col-md-offset-4">
+        <div class="form-group">
+          <label for="usr">Enter Amount:</label>
+          <input type="number" class="form-control" id="amt">
+        </div>
+        <div class="box-footer text-center">
+          <button type="button" class="btn btn-primary" onclick="getInputValue();">Get Value</button>
+          <a type="button" href="../index.html" class="btn btn-primary">Back</a>
+          <a type="button" href="getcurrencydata.html" class="btn btn-primary">View Previous Currency Search Data</a>
+        </div>
+
+        <div id="outputDiv" class="text-center"></div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+
+</html>

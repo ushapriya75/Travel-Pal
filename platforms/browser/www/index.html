@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Geolocation</title>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <script language="JavaScript" src="http://www.geoplugin.net/javascript.gp" type="text/javascript"></script>
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyCiD9PEd0fY39Y6y1t2-Nj3K3Q3yNzV0O0",
+      authDomain: "fir-app-e5712.firebaseapp.com",
+      databaseURL: "https://fir-app-e5712.firebaseio.com",
+      projectId: "fir-app-e5712",
+      storageBucket: "fir-app-e5712.appspot.com",
+      messagingSenderId: "33938463986",
+      appId: "1:33938463986:web:3876a645ffc1f4e745846b"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+  </script>
+  <style>
+    /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+    #map {
+      height: 70%;
+    }
+
+    /* Optional: Makes the sample page fill the window. */
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .content {
+      max-width: 500px;
+      margin: auto;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="map"></div>
+
+  <div class="content">
+    <script>
+
+
+      document.write("<h3>Welcome to our visitors from " + geoplugin_city() + ", " + geoplugin_countryName() + "</h3>");
+      var uid = firebase.database().ref().child('location').push().key;
+      var city = geoplugin_city();
+      var country = geoplugin_countryName();
+      var data = {
+        id: uid,
+        city: city,
+        country: country
+      }
+
+      
+      var updates = {};
+      updates['/location/' + uid] = data;
+      firebase.database().ref().update(updates);
+      
+
+
+
+    </script>
+  </div>
+  <div class="box-footer text-center">
+    <a type="button" href="weather/index.html" class="btn btn-primary text-center">Weather Condition</a>
+    <a type="button" href="currency/index.html" class="btn btn-primary text-center">Currency Converter</a>
+    <a type="button" href="getlocationdata.html" class="btn btn-primary text-center">View Previous Location Data</a>
+  </div>
+
+  <div id="location"></div>
+
+  <script>
+    // Note: This example requires that you consent to location sharing when
+    // prompted by your browser. If you see the error "The Geolocation service
+    // failed.", it means you probably did not give permission for the browser to
+    // locate you.
+    var map, infoWindow;
+    function initMap() {
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: -34.397, lng: 150.644 },
+        zoom: 20
+      });
+      infoWindow = new google.maps.InfoWindow;
+
+      // Try HTML5 geolocation.
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+          var pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          };
+
+          infoWindow.setPosition(pos);
+          infoWindow.setContent('Location found.');
+          infoWindow.open(map);
+          map.setCenter(pos);
+        }, function () {
+          handleLocationError(true, infoWindow, map.getCenter());
+        });
+      } else {
+        // Browser doesn't support Geolocation
+        handleLocationError(false, infoWindow, map.getCenter());
+      }
+    }
+
+    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+      infoWindow.setPosition(pos);
+      infoWindow.setContent(browserHasGeolocation ?
+        'Error: The Geolocation service failed.' :
+        'Error: Your browser doesn\'t support geolocation.');
+      infoWindow.open(map);
+    }
+  </script>
+
+
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAGx_jqdirIPNz_v0yCALvunuy_VHyhZeE&callback=initMap">
+    </script>
+
+
+</body>
+
+</html>
